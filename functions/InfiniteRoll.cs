@@ -39,6 +39,19 @@ public class CPHInline
         return defaultValue;
     }
     
+    private void SetGlobalVar(string varName, object value, bool persist = false)
+    {
+        try
+        {
+            var method = CPH.GetType().GetMethod("SetGlobalVar", new Type[] { typeof(string), typeof(object), typeof(bool) });
+            if (method != null)
+            {
+                method.Invoke(CPH, new object[] { varName, value, persist });
+            }
+        }
+        catch { }
+    }
+    
     private string GetArg(string argName)
     {
         try
@@ -93,8 +106,8 @@ public class CPHInline
         while (DateTime.Now - startTime < duration && !shouldStop)
         {
             // Check global variable for stop condition at start of each cycle
-            bool globalStop = GetGlobalVar<bool>("infiniteRollStop", false);
-            if (globalStop)
+            string globalState = CPH.GetGlobalVar<string>("infiniteRollStop", true);
+            if (!string.IsNullOrEmpty(globalState) && globalState.ToLower() == "stop")
             {
                 shouldStop = true;
                 break;
@@ -137,11 +150,21 @@ public class CPHInline
         string stopArg = GetArg("stop")?.ToLower() ?? "";
         if (stopArg == "true" || stopArg == "1")
         {
+            // Signal any running instance via global variable
+            CPH.SetGlobalVar("infiniteRollStop", "stop", true);
             shouldStop = true;
             return true;
         }
         
-        // Reset stop flag and start new loop
+        // Check current global state - don't run if it's "stop"
+        string currentState = CPH.GetGlobalVar<string>("infiniteRollStop", true);
+        if (!string.IsNullOrEmpty(currentState) && currentState.ToLower() == "stop")
+        {
+            return true; // Don't start if global state is "stop"
+        }
+        
+        // Set state to "start" and begin new loop
+        CPH.SetGlobalVar("infiniteRollStop", "start", true);
         shouldStop = false;
 
         Thread t = new Thread(() => Run().Wait());
@@ -152,6 +175,7 @@ public class CPHInline
     public void Stop()
     {
         shouldStop = true;
+        CPH.SetGlobalVar("infiniteRollStop", "stop", true);
     }
     
     public static void Main()
