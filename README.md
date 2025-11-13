@@ -18,6 +18,9 @@ A collection of C# functions designed to be used with StreamerBot. Each function
   - `inputSeconds` (number) - How long to hold the key in seconds
 - **RandomEmote.cs** - Presses a random number key (0-9) followed by Enter to trigger random emotes
 
+- **InfiniteRoll** - Does w and space for 20 s, annoying atm as it doesn't stop/have a short circuit, need to look into how to stop it mid function.
+
+
 ## StreamerBot Setup
 
 ### For functions requiring inputs:
