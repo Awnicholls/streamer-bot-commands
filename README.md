@@ -8,6 +8,10 @@ A collection of C# functions designed to be used with StreamerBot. Each function
 
 - **RandomKeySequence.cs** - Presses G, then a random number of Right arrow keys (1-10), then E with a 100ms delay before the final E key
 - **ButtonSequence.cs** - Basic key sequence: Escape → Right → E → F → Escape with 100ms delays between each key
+- **CustomArrowSequence.cs** - Presses a random number of specified arrow keys, then a specified use key. **Requires StreamerBot inputs:**
+  - `arrowDirection` (string) - Arrow direction: "Down", "Left", "Right", or "Up"
+  - `useKey` (string) - Key to press after arrows (e.g., "E", "F", "Space")
+  - `maxPresses` (number) - Maximum number of arrow presses (1 to this number)
 
 - **HoldButton.cs** - Holds down a specified key for a specified duration. **Requires StreamerBot inputs:**
   - `inputKey` (string) - The key to hold (e.g., "W", "Space", "Shift")
@@ -16,11 +20,21 @@ A collection of C# functions designed to be used with StreamerBot. Each function
 
 ## StreamerBot Setup
 
-### For functions requiring inputs (HoldButton.cs):
+### For functions requiring inputs:
+
+**HoldButton.cs:**
 1. Copy the entire .cs file content into a StreamerBot C# action
 2. Add the required arguments in StreamerBot:
    - Add argument `inputKey` (string type)
    - Add argument `inputSeconds` (number type)
+3. Set the argument values when calling the action
+
+**CustomArrowSequence.cs:**
+1. Copy the entire .cs file content into a StreamerBot C# action
+2. Add the required arguments in StreamerBot:
+   - Add argument `arrowDirection` (string type) - Must be "Down", "Left", "Right", or "Up"
+   - Add argument `useKey` (string type) - Any valid key like "E", "F", "Space", etc.
+   - Add argument `maxPresses` (number type) - Maximum number of arrow presses
 3. Set the argument values when calling the action
 
 ### For standalone functions:
