@@ -9,9 +9,11 @@ A collection of C# functions designed to be used with StreamerBot. Each function
 - **RandomKeySequence.cs** - Presses G, then a random number of Right arrow keys (1-10), then E with a 100ms delay before the final E key
 - **ButtonSequence.cs** - Basic key sequence: Escape → Right → E → F → Escape with 100ms delays between each key
 - **CustomArrowSequence.cs** - Presses a random number of specified arrow keys, then a specified use key. **Requires StreamerBot inputs:**
-  - `arrowDirection` (string) - Arrow direction: "Down", "Left", "Right", or "Up"
+  - `arrowDirection` (string) - Arrow direction: "Down", "Left", "Right", "Up", "ScrollUp", or "ScrollDown"
   - `useKey` (string) - Key to press after arrows (e.g., "E", "F", "Space")
   - `maxPresses` (number) - Maximum number of arrow presses (1 to this number)
+- **KeyInterceptor.cs** - Intercepts and blocks WASD key inputs for 60 minutes based on global variable. **Optional StreamerBot input:**
+  - `startInterception` (string) - "true" to start, "false" to stop (also checks global var "keyInterceptActive")
 
 - **HoldButton.cs** - Holds down a specified key for a specified duration. **Requires StreamerBot inputs:**
   - `inputKey` (string) - The key to hold (e.g., "W", "Space", "Shift")
