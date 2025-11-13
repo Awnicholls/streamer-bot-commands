@@ -15,7 +15,7 @@ public class CPHInline
     
     const uint KEYEVENTF_KEYUP = 0x0002;
     const uint MOUSEEVENTF_WHEEL = 0x0800;
-    const int WHEEL_DELTA = 120;
+    const int WHEEL_DELTA = 360; // Increased from 120 to 360 for stronger scroll
     
     static readonly Dictionary<string, byte> KeyMap = new Dictionary<string, byte>
     {
@@ -51,13 +51,23 @@ public class CPHInline
         // Handle mouse scroll events
         if (key == 0xFF) // ScrollUp
         {
-            mouse_event(MOUSEEVENTF_WHEEL, 0, 0, WHEEL_DELTA, IntPtr.Zero);
+            // Send multiple scroll events for better application compatibility
+            for (int i = 0; i < 3; i++)
+            {
+                mouse_event(MOUSEEVENTF_WHEEL, 0, 0, WHEEL_DELTA, IntPtr.Zero);
+                await Task.Delay(10);
+            }
             await Task.Delay(holdMs);
             return;
         }
         else if (key == 0xFE) // ScrollDown
         {
-            mouse_event(MOUSEEVENTF_WHEEL, 0, 0, -WHEEL_DELTA, IntPtr.Zero);
+            // Send multiple scroll events for better application compatibility
+            for (int i = 0; i < 3; i++)
+            {
+                mouse_event(MOUSEEVENTF_WHEEL, 0, 0, -WHEEL_DELTA, IntPtr.Zero);
+                await Task.Delay(10);
+            }
             await Task.Delay(holdMs);
             return;
         }
