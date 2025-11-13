@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Collections.Generic;
 
-public class KeyPressSequence
+public class CPHInline
 {
     [DllImport("user32.dll")]
     static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, IntPtr extraInfo);
@@ -84,6 +84,6 @@ public class KeyPressSequence
     }
     public static void Main()
     {
-        new KeyPressSequence().Execute();
+        new CPHInline().Execute();
     }
 }

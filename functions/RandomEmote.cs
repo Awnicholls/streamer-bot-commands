@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Collections.Generic;
 
-public class RandomEmote
+public class CPHInline
 {
     [DllImport("user32.dll")]
     static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, IntPtr extraInfo);
@@ -79,6 +79,6 @@ public class RandomEmote
 
     public static void Main()
     {
-        new RandomEmote().Execute();
+        new CPHInline().Execute();
     }
 }

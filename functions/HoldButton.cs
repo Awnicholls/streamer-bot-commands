@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-public class HoldButton
+public class CPHInline
 {
     System.Timers.Timer timer;
     static bool HoldKey = false;
