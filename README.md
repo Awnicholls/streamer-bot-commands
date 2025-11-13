@@ -12,8 +12,6 @@ A collection of C# functions designed to be used with StreamerBot. Each function
   - `arrowDirection` (string) - Arrow direction: "Down", "Left", "Right", "Up", "ScrollUp", or "ScrollDown"
   - `useKey` (string) - Key to press after arrows (e.g., "E", "F", "Space")
   - `maxPresses` (number) - Maximum number of arrow presses (1 to this number)
-- **KeyInterceptor.cs** - Intercepts and blocks WASD key inputs for 60 minutes based on global variable. **Optional StreamerBot input:**
-  - `startInterception` (string) - "true" to start, "false" to stop (also checks global var "keyInterceptActive")
 
 - **HoldButton.cs** - Holds down a specified key for a specified duration. **Requires StreamerBot inputs:**
   - `inputKey` (string) - The key to hold (e.g., "W", "Space", "Shift")
