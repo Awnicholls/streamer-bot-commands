@@ -133,7 +133,6 @@ public class CPHInline
                 }
                 else if (!string.IsNullOrEmpty(rawInput) && rawInput.ToLower().StartsWith("infiniterollstop "))
                 {
-                    // Extract the value part after "infiniterollstop "
                     string value = rawInput.Substring("infiniterollstop ".Length).ToLower().Trim();
                     if (value == "true")
                     {
@@ -150,20 +149,17 @@ public class CPHInline
         string stopArg = GetArg("stop")?.ToLower() ?? "";
         if (stopArg == "true" || stopArg == "1")
         {
-            // Signal any running instance via global variable
             CPH.SetGlobalVar("infiniteRollStop", "stop", true);
             shouldStop = true;
             return true;
         }
         
-        // Check current global state - don't run if it's "stop"
         string currentState = CPH.GetGlobalVar<string>("infiniteRollStop", true);
         if (!string.IsNullOrEmpty(currentState) && currentState.ToLower() == "stop")
         {
-            return true; // Don't start if global state is "stop"
+            return true;
         }
         
-        // Set state to "start" and begin new loop
         CPH.SetGlobalVar("infiniteRollStop", "start", true);
         shouldStop = false;
 
