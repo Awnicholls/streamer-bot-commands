@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Collections.Generic;
 
-public class CPHInline
+public class RandomArrowKeySequence
 {
     [DllImport("user32.dll")]
     static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, IntPtr extraInfo);
@@ -55,11 +55,8 @@ public class CPHInline
         keybd_event(key, scan, flagsUp, IntPtr.Zero);
     }
 
-    async Task Run()
+    async Task Run(string arrowDirection, string useKey, int maxPresses)
     {
-        string arrowDirection = args["arrowDirection"].ToString();
-        string useKey = args["useKey"].ToString();
-        int maxPresses = Convert.ToInt32(args["maxPresses"]);
         
         if (!KeyMap.ContainsKey(arrowDirection) || !KeyMap.ContainsKey(useKey))
         {
@@ -96,7 +93,29 @@ public class CPHInline
 
     public bool Execute()
     {
-        Thread t = new Thread(() => Run().Wait());
+        string arrowDirection = "Right"; // default
+        string useKey = "E"; // default
+        int maxPresses = 10; // default
+        
+        if (args.ContainsKey("arrowDirection"))
+        {
+            arrowDirection = args["arrowDirection"].ToString();
+        }
+        
+        if (args.ContainsKey("useKey"))
+        {
+            useKey = args["useKey"].ToString();
+        }
+        
+        if (args.ContainsKey("maxPresses"))
+        {
+            if (int.TryParse(args["maxPresses"].ToString(), out int presses))
+            {
+                maxPresses = presses;
+            }
+        }
+        
+        Thread t = new Thread(() => Run(arrowDirection, useKey, maxPresses).Wait());
         t.Start();
         return true;
     }
