@@ -10,12 +10,20 @@ public class CPHInline
     static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, IntPtr extraInfo);
     [DllImport("user32.dll")]
     static extern uint MapVirtualKey(uint uCode, uint uMapType);
+    [DllImport("user32.dll")]
+    static extern void mouse_event(uint dwFlags, int dx, int dy, int dwData, IntPtr dwExtraInfo);
+    
     const uint KEYEVENTF_KEYUP = 0x0002;
+    const uint MOUSEEVENTF_WHEEL = 0x0800;
+    const int WHEEL_DELTA = 120;
     
     static readonly Dictionary<string, byte> KeyMap = new Dictionary<string, byte>
     {
         // Arrow keys
         { "Down", 0x28 }, { "Left", 0x25 }, { "Right", 0x27 }, { "Up", 0x26 },
+        
+        // Mouse scroll (using special values)
+        { "ScrollUp", 0xFF }, { "ScrollDown", 0xFE },
         
         // Letters A-Z
         { "A", 0x41 }, { "B", 0x42 }, { "C", 0x43 }, { "D", 0x44 },
@@ -40,6 +48,21 @@ public class CPHInline
     
     async Task PressKey(byte key, int holdMs = 50)
     {
+        // Handle mouse scroll events
+        if (key == 0xFF) // ScrollUp
+        {
+            mouse_event(MOUSEEVENTF_WHEEL, 0, 0, WHEEL_DELTA, IntPtr.Zero);
+            await Task.Delay(holdMs);
+            return;
+        }
+        else if (key == 0xFE) // ScrollDown
+        {
+            mouse_event(MOUSEEVENTF_WHEEL, 0, 0, -WHEEL_DELTA, IntPtr.Zero);
+            await Task.Delay(holdMs);
+            return;
+        }
+        
+        // Handle regular keyboard keys
         byte scan = (byte)MapVirtualKey(key, 0);
         uint flags = 0;
         uint flagsUp = KEYEVENTF_KEYUP;
