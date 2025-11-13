@@ -4,12 +4,10 @@ A collection of C# functions designed to be used with StreamerBot. Each function
 
 ## Functions
 
-### KeySequenceFunctions/
+### functions/
 
 - **RandomKeySequence.cs** - Presses G, then a random number of Right arrow keys (1-10), then E with a 100ms delay before the final E key
 - **ButtonSequence.cs** - Basic key sequence: Escape → Right → E → F → Escape with 100ms delays between each key
-
-### UtilityFunctions/
 
 - **HoldButton.cs** - Holds down a specified key for a specified duration. **Requires StreamerBot inputs:**
   - `inputKey` (string) - The key to hold (e.g., "W", "Space", "Shift")
