@@ -19,71 +19,10 @@ public class CPHInline
         { "Space", 0x20 }
     };
     
+    // change this to be the duration of the loop
     readonly int loopDurationSeconds = 20;
     
     private volatile bool shouldStop = false;
-    
-    private T GetGlobalVar<T>(string varName, T defaultValue)
-    {
-        try
-        {
-            var method = CPH.GetType().GetMethod("GetGlobalVar");
-            if (method != null)
-            {
-                var genericMethod = method.MakeGenericMethod(typeof(T));
-                var result = genericMethod.Invoke(CPH, new object[] { varName, defaultValue });
-                return (T)result;
-            }
-        }
-        catch { }
-        return defaultValue;
-    }
-    
-    private void SetGlobalVar(string varName, object value, bool persist = false)
-    {
-        try
-        {
-            var method = CPH.GetType().GetMethod("SetGlobalVar", new Type[] { typeof(string), typeof(object), typeof(bool) });
-            if (method != null)
-            {
-                method.Invoke(CPH, new object[] { varName, value, persist });
-            }
-        }
-        catch { }
-    }
-    
-    private string GetArg(string argName)
-    {
-        try
-        {
-            var method = CPH.GetType().GetMethod("GetArg");
-            if (method != null)
-            {
-                var result = method.Invoke(CPH, new object[] { argName });
-                return result?.ToString() ?? "";
-            }
-        }
-        catch { }
-        return "";
-    }
-    
-    private bool TryGetArg(string argName, out string value)
-    {
-        try
-        {
-            var method = CPH.GetType().GetMethod("TryGetArg", new Type[] { typeof(string), typeof(string).MakeByRefType() });
-            if (method != null)
-            {
-                object[] parameters = new object[] { argName, null };
-                bool result = (bool)method.Invoke(CPH, parameters);
-                value = parameters[1]?.ToString() ?? "";
-                return result;
-            }
-        }
-        catch { }
-        value = "";
-        return false;
-    }
     
     async Task PressKey(byte key, int holdMs = 50)
     {
@@ -105,7 +44,6 @@ public class CPHInline
         
         while (DateTime.Now - startTime < duration && !shouldStop)
         {
-            // Check global variable for stop condition at start of each cycle
             string globalState = CPH.GetGlobalVar<string>("infiniteRollStop", true);
             if (!string.IsNullOrEmpty(globalState) && globalState.ToLower() == "stop")
             {
@@ -122,31 +60,12 @@ public class CPHInline
             byte spaceKey = KeyMap["Space"];
             await PressKey(spaceKey);
             await Task.Delay(100);
-            
-            // Check rawInput for infiniteRollStop command after each W+Space sequence
-            if (CPH != null && TryGetArg("rawInput", out string rawInput))
-            {
-                if (!string.IsNullOrEmpty(rawInput) && rawInput.ToLower() == "infiniterollstop")
-                {
-                    shouldStop = true;
-                    break;
-                }
-                else if (!string.IsNullOrEmpty(rawInput) && rawInput.ToLower().StartsWith("infiniterollstop "))
-                {
-                    string value = rawInput.Substring("infiniterollstop ".Length).ToLower().Trim();
-                    if (value == "true")
-                    {
-                        shouldStop = true;
-                        break;
-                    }
-                }
-            }
         }
     }
 
     public bool Execute()
     {
-        string stopArg = GetArg("stop")?.ToLower() ?? "";
+        string stopArg = CPH.GetArg("stop")?.ToLower() ?? "";
         if (stopArg == "true" || stopArg == "1")
         {
             CPH.SetGlobalVar("infiniteRollStop", "stop", true);
