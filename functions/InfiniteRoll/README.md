@@ -5,8 +5,8 @@ A StreamerBot C# function that continuously presses W (forward) and Space (jump/
 ## Description
 
 This function alternates between pressing:
-1. **W** key (forward movement)
-2. **Space** key (jump/roll action)
+1. **W**
+2. **Space**
 
 Each key is held for 50ms with 100ms delays between presses, running continuously for 20 seconds by default (configurable).
 
@@ -62,19 +62,6 @@ static readonly Dictionary<string, byte> KeyMap = new Dictionary<string, byte>
 The function uses StreamerBot's global variables:
 - `infiniteRollStop` = `"start"` → Function is running
 - `infiniteRollStop` = `"stop"` → Function stops/won't start
-
-This allows multiple actions and hotkeys to control the same rolling state.
-
-## Example StreamerBot Integration
-
-1. **Main Action** (Hotkey: `[`)
-   - Add C# action with InfiniteRoll.cs code
-   
-2. **Stop Action** (Hotkey: `]`)
-   - Add C# action with: `CPH.SetGlobalVar("infiniteRollStop", "stop", true);`
-
-3. **Chat Command** (`!roll stop`)
-   - Command trigger with raw input parameter set to "infiniterollstop"
 
 
 ## Notes

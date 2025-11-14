@@ -59,5 +59,4 @@ Duration to hold the key in seconds. Can be whole numbers or decimals:
 - **Currently supports letter keys A-Z only** (other keys like Space, Shift, arrows not yet supported)
 - The key is held down continuously for the entire duration
 - Function is non-blocking - other actions can still be triggered
-- Works with both physical and virtual key presses
 - Key input is case-insensitive (both "w" and "W" work)
