@@ -44,6 +44,19 @@ public class CPHInline
         
         while (DateTime.Now - startTime < duration && !shouldStop)
         {
+            // Check for rawInput parameter to stop the function
+            if (CPH.TryGetArg("rawInput", out string rawInput))
+            {
+                if (!string.IsNullOrEmpty(rawInput) && 
+                    (rawInput.ToLower() == "true" || rawInput.ToLower() == "infiniterollstop"))
+                {
+                    shouldStop = true;
+                    CPH.SetGlobalVar("infiniteRollStop", "stop", true);
+                    break;
+                }
+            }
+            
+            // Check global variable state
             string globalState = CPH.GetGlobalVar<string>("infiniteRollStop", true);
             if (!string.IsNullOrEmpty(globalState) && globalState.ToLower() == "stop")
             {
@@ -65,12 +78,26 @@ public class CPHInline
 
     public bool Execute()
     {
+        // Check for rawInput parameter on every execution
+        if (CPH.TryGetArg("rawInput", out string rawInput))
+        {
+            if (!string.IsNullOrEmpty(rawInput) && 
+                (rawInput.ToLower() == "true" || rawInput.ToLower() == "infiniterollstop"))
+            {
+                shouldStop = true;
+                CPH.SetGlobalVar("infiniteRollStop", "stop", true);
+                return true;
+            }
+        }
+        
+        // Check current global state
         string currentState = CPH.GetGlobalVar<string>("infiniteRollStop", true);
         if (!string.IsNullOrEmpty(currentState) && currentState.ToLower() == "stop")
         {
-            return true;
+            return true; // Don't start if already stopped
         }
         
+        // Set state to start and begin the infinite roll
         CPH.SetGlobalVar("infiniteRollStop", "start", true);
         shouldStop = false;
 
