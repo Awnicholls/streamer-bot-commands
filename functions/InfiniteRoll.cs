@@ -65,14 +65,6 @@ public class CPHInline
 
     public bool Execute()
     {
-        string stopArg = CPH.GetArg("stop")?.ToLower() ?? "";
-        if (stopArg == "true" || stopArg == "1")
-        {
-            CPH.SetGlobalVar("infiniteRollStop", "stop", true);
-            shouldStop = true;
-            return true;
-        }
-        
         string currentState = CPH.GetGlobalVar<string>("infiniteRollStop", true);
         if (!string.IsNullOrEmpty(currentState) && currentState.ToLower() == "stop")
         {
